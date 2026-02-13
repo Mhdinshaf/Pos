@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -19,7 +20,7 @@ import java.sql.SQLException;
 
 
 public class loginController {
-    private  Stage stage=new Stage();
+    private Stage stage = new Stage();
 
     @FXML
     private TextField emailTxt;
@@ -27,13 +28,21 @@ public class loginController {
     @FXML
     private PasswordField passwordTxt;
 
-    private final UserLoginSer userLogin= new UserLoginImplSer();
+    @FXML
+    private ComboBox<String> cmbRole;
+
+    private final UserLoginSer userLogin = new UserLoginImplSer();
 
 
     @FXML
     void ForgotPasswordOnAction(ActionEvent event) {
 
 
+    }
+
+    @FXML
+    public void initialize() {
+        cmbRole.getItems().addAll("Admin", "Staff");
     }
 
     @FXML
@@ -44,38 +53,46 @@ public class loginController {
         String password = passwordTxt.getText();
 
         if (email.isEmpty() || password.isEmpty()) {
-             new Alert(Alert.AlertType.ERROR, "Please enter both email and password!").show();
+            new Alert(Alert.AlertType.ERROR, "Please enter both email and password!").show();
             return;
         }
 
-        UserDto userDto= new UserDto(email, password);
+        UserDto userDto = new UserDto(email, password);
         try {
             boolean isVerified = userLogin.checkCredential(email, password);
 
             if (isVerified) {
                 new Alert(Alert.AlertType.INFORMATION, "Login Successful!").show();
             } else {
-                new  Alert(Alert.AlertType.ERROR, "Invalid Email or Password!").show();
+                new Alert(Alert.AlertType.ERROR, "Invalid Email or Password!").show();
             }
 
         } catch (SQLException | ClassNotFoundException e) {
-              new Alert(Alert.AlertType.ERROR, "Database Error: " + e.getMessage()).show();
+            new Alert(Alert.AlertType.ERROR, "Database Error: " + e.getMessage()).show();
             e.printStackTrace();
         }
 
 
     }
 
-    @FXML
-    void SignUoOnAction(ActionEvent event){
+    public void cmbRoleOnAction(ActionEvent actionEvent) {
 
-        try {
-            stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/view/SignUp.fxml"))));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        String SelectedRole = cmbRole.getValue();
+        if (SelectedRole == "Admin") {
+            try {
+                stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/view/AdminLogin.fxml"))));
+                stage.show();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            if (SelectedRole == "Staff") {
+                try {
+                    stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/view/Login.fxml"))));
+                    stage.show();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
-        stage.show();
-
-      }
-
+    }
 }
