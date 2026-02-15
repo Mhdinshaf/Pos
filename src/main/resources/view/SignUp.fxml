@@ -45,14 +45,14 @@
             </Label>
             <Label layoutX="34.0" layoutY="86.0" prefHeight="18.0" prefWidth="67.0" text="Name" />
             <Label layoutX="34.0" layoutY="159.0" prefHeight="18.0" prefWidth="67.0" text="Email" />
-            <TextField layoutX="123.0" layoutY="82.0" prefHeight="26.0" prefWidth="214.0" promptText="Name" style="-fx-background-color: transparent; -fx-border-color: #304FFE; -fx-border-radius: 5;" />
-            <TextField layoutX="123.0" layoutY="155.0" prefHeight="26.0" prefWidth="214.0" promptText="Email" style="-fx-background-color: transparent; -fx-border-radius: 5; -fx-border-color: #304FFE;" />
-            <PasswordField layoutX="123.0" layoutY="190.0" prefHeight="26.0" prefWidth="214.0" promptText="Password" style="-fx-background-color: transparent; -fx-border-radius: 5; -fx-border-color: #304FFE;" />
+            <TextField fx:id="txtName" layoutX="123.0" layoutY="82.0" prefHeight="26.0" prefWidth="214.0" promptText="Name" style="-fx-background-color: transparent; -fx-border-color: #304FFE; -fx-border-radius: 5;" />
+            <TextField fx:id="txtEmail" layoutX="123.0" layoutY="155.0" prefHeight="26.0" prefWidth="214.0" promptText="Email" style="-fx-background-color: transparent; -fx-border-radius: 5; -fx-border-color: #304FFE;" />
+            <PasswordField fx:id="txtPassword" layoutX="123.0" layoutY="190.0" prefHeight="26.0" prefWidth="214.0" promptText="Password" style="-fx-background-color: transparent; -fx-border-radius: 5; -fx-border-color: #304FFE;" />
             <Label layoutX="34.0" layoutY="194.0" prefHeight="18.0" prefWidth="67.0" text="Password" />
-            <ComboBox layoutX="123.0" layoutY="227.0" prefWidth="150.0" promptText="Role" style="-fx-background-color: transparent; -fx-border-radius: 5; -fx-border-color: #304FFE;" />
+            <ComboBox fx:id="selectRole" layoutX="123.0" layoutY="227.0" prefWidth="150.0" promptText="Role" style="-fx-background-color: transparent; -fx-border-radius: 5; -fx-border-color: #304FFE;" />
             <Label layoutX="34.0" layoutY="230.0" prefHeight="18.0" prefWidth="67.0" text="Role" />
-            <Button layoutX="32.0" layoutY="277.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="138.0" style="-fx-background-color: #304FFE; -fx-background-radius: 10;" text="Create Account" textFill="WHITE" />
-            <TextField layoutX="123.0" layoutY="119.0" prefHeight="26.0" prefWidth="214.0" promptText="Id Number" style="-fx-background-color: transparent; -fx-border-color: #304FFE; -fx-border-radius: 5;" />
+            <Button layoutX="32.0" layoutY="277.0" mnemonicParsing="false" onAction="#createAccountOnAction" prefHeight="35.0" prefWidth="138.0" style="-fx-background-color: #304FFE; -fx-background-radius: 10;" text="Create Account" textFill="WHITE" />
+            <TextField fx:id="txtIdNumber" layoutX="123.0" layoutY="119.0" prefHeight="26.0" prefWidth="214.0" promptText="Id Number" style="-fx-background-color: transparent; -fx-border-color: #304FFE; -fx-border-radius: 5;" />
             <Label layoutX="34.0" layoutY="123.0" prefHeight="18.0" prefWidth="67.0" text="Identity" />
          </children>
       </AnchorPane>
