@@ -4,11 +4,9 @@ package org.Pos.controller.login;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.Pos.Model.dto.UserDto;
 import org.Pos.service.UserLoginSer;
@@ -16,7 +14,7 @@ import org.Pos.service.impl.UserLoginImplSer;
 
 import java.io.IOException;
 import java.sql.SQLException;
-
+import java.util.Optional;
 
 
 public class loginController {
@@ -76,23 +74,48 @@ public class loginController {
     }
 
     public void cmbRoleOnAction(ActionEvent actionEvent) {
-
-        String SelectedRole = cmbRole.getValue();
-        if (SelectedRole == "Admin") {
-            try {
-                stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/view/AdminLogin.fxml"))));
-                stage.show();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            String selectedRole = cmbRole.getValue();
+            if (selectedRole == null) {
+                return;
             }
-            if (SelectedRole == "Staff") {
-                try {
-                    stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/view/Login.fxml"))));
+
+            try {
+                Stage stage = (Stage) cmbRole.getScene().getWindow();
+
+                if (selectedRole.equals("Admin")) {
+
+
+                    TextInputDialog dialog = new TextInputDialog();
+                    dialog.setTitle("Admin Verification");
+                    dialog.setHeaderText("Protected Area");
+                    dialog.setContentText("Enter Admin PIN:");
+
+
+                    Optional<String> result = dialog.showAndWait();
+
+
+                    if (result.isPresent() && result.get().equals("1234")) {
+
+                        Parent root = FXMLLoader.load(getClass().getResource("/view/AdminLogin.fxml"));
+                        stage.setScene(new Scene(root));
+                        stage.centerOnScreen();
+                        stage.show();
+
+                    } else {
+                        new Alert(Alert.AlertType.ERROR, "Wrong PIN!").show();
+                        cmbRole.setValue("Staff");
+                    }
+
+                } else if (selectedRole.equals("Staff")) {
+                    Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
+                    stage.setScene(new Scene(root));
                     stage.show();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
                 }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Page Load Error: " + e.getMessage()).show();
             }
         }
     }
-}
+
