@@ -3,5 +3,6 @@ package org.Pos.repository;
 import java.sql.SQLException;
 
 public interface UserLoginRepo {
-    boolean checkCredential(String email, String password) throws SQLException, ClassNotFoundException;
+    boolean checkCredential(String email, String password) throws SQLException;
+    String getUserRole(String email) throws SQLException;
 }

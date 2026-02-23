@@ -26,96 +26,63 @@ public class loginController {
     @FXML
     private PasswordField passwordTxt;
 
-    @FXML
-    private ComboBox<String> cmbRole;
 
     private final UserLoginSer userLogin = new UserLoginImplSer();
 
 
     @FXML
     void ForgotPasswordOnAction(ActionEvent event) {
-
-
-    }
-
-    @FXML
-    public void initialize() {
-        cmbRole.getItems().addAll("Admin", "Staff");
     }
 
     @FXML
     void SignInOnAction(ActionEvent event) {
 
+            String email = emailTxt.getText();
+            String password = passwordTxt.getText();
 
-        String email = emailTxt.getText();
-        String password = passwordTxt.getText();
-
-        if (email.isEmpty() || password.isEmpty()) {
-            new Alert(Alert.AlertType.ERROR, "Please enter both email and password!").show();
-            return;
-        }
-
-        UserDto userDto = new UserDto(email, password);
-        try {
-            boolean isVerified = userLogin.checkCredential(email, password);
-
-            if (isVerified) {
-                new Alert(Alert.AlertType.INFORMATION, "Login Successful!").show();
-            } else {
-                new Alert(Alert.AlertType.ERROR, "Invalid Email or Password!").show();
-            }
-
-        } catch (SQLException | ClassNotFoundException e) {
-            new Alert(Alert.AlertType.ERROR, "Database Error: " + e.getMessage()).show();
-            e.printStackTrace();
-        }
-
-
-    }
-
-    public void cmbRoleOnAction(ActionEvent actionEvent) {
-            String selectedRole = cmbRole.getValue();
-            if (selectedRole == null) {
+            if (email.isEmpty() || password.isEmpty()) {
+                new Alert(Alert.AlertType.ERROR, "Please enter both email and password!").show();
                 return;
             }
 
             try {
-                Stage stage = (Stage) cmbRole.getScene().getWindow();
+                boolean isVerified = userLogin.checkCredential(email, password);
 
-                if (selectedRole.equals("Admin")) {
-
-
-                    TextInputDialog dialog = new TextInputDialog();
-                    dialog.setTitle("Admin Verification");
-                    dialog.setHeaderText("Protected Area");
-                    dialog.setContentText("Enter Admin PIN:");
+                if (isVerified) {
+                    String role = userLogin.getUserRole(email);
 
 
-                    Optional<String> result = dialog.showAndWait();
+                    Stage stage = (Stage) emailTxt.getScene().getWindow();
+                    Parent root = null;
+
+                    if (role != null && role.equals("Admin")) {
+                        root = FXMLLoader.load(getClass().getResource("/view/AdminLogin.fxml"));
+                    } else {
+                        root = FXMLLoader.load(getClass().getResource("/view/StaffDashboard.fxml"));
+                    }
 
 
-                    if (result.isPresent() && result.get().equals("1234")) {
-
-                        Parent root = FXMLLoader.load(getClass().getResource("/view/AdminLogin.fxml"));
+                    if (root != null) {
                         stage.setScene(new Scene(root));
                         stage.centerOnScreen();
                         stage.show();
-
-                    } else {
-                        new Alert(Alert.AlertType.ERROR, "Wrong PIN!").show();
-                        cmbRole.setValue("Staff");
                     }
 
-                } else if (selectedRole.equals("Staff")) {
-                    Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-                    stage.setScene(new Scene(root));
-                    stage.show();
+                } else {
+                    new Alert(Alert.AlertType.ERROR, "Invalid Email or Password!").show();
                 }
 
-            } catch (IOException e) {
+            } catch (SQLException | IOException e) {
+                new Alert(Alert.AlertType.ERROR, "Error: " + e.getMessage()).show();
                 e.printStackTrace();
-                new Alert(Alert.AlertType.ERROR, "Page Load Error: " + e.getMessage()).show();
             }
         }
+
+
     }
+
+
+
+
+
 

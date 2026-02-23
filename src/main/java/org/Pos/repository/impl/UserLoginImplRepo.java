@@ -10,8 +10,13 @@ import  java.sql.Connection;
 public class UserLoginImplRepo implements UserLoginRepo {
 
     @Override
-    public boolean checkCredential(String email, String password) throws SQLException, ClassNotFoundException {
-        Connection connection = DbConnection.getInstance().getConnection();
+    public boolean checkCredential(String email, String password) throws SQLException{
+        Connection connection = null;
+        try {
+            connection = DbConnection.getInstance().getConnection();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
 
         String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 
@@ -23,5 +28,27 @@ public class UserLoginImplRepo implements UserLoginRepo {
 
 
         return resultSet.next();
+    }
+
+    @Override
+    public  String getUserRole(String email) throws SQLException{
+        Connection connection = null;
+        try {
+            connection = DbConnection.getInstance().getConnection();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        String sql = "SELECT role FROM users WHERE email = ?";
+
+        PreparedStatement pstm = connection.prepareStatement(sql);
+        pstm.setString(1, email);
+
+        ResultSet resultSet = pstm.executeQuery();
+
+        if (resultSet.next()) {
+            return resultSet.getString("role");
+        }
+        return null;
     }
 }
