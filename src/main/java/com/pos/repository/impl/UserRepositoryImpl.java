@@ -2,7 +2,7 @@ package com.pos.repository.impl;
 
 import com.pos.model.User;
 import com.pos.repository.UserRepository;
-import org.Pos.db.DbConnection;
+import com.pos.db.DbConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

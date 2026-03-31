@@ -1,4 +1,4 @@
-package org.Pos.db;
+package com.pos.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
