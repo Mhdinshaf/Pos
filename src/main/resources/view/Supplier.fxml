@@ -11,16 +11,25 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #1a1a2e;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pos.controller.SupplierController">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #1a1f36;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pos.controller.SupplierController">
     <children>
         <VBox spacing="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
             <children>
-                <!-- Header -->
-                <Label text="SUPPLIER MANAGEMENT" textFill="#e94560">
-                    <font>
-                        <Font name="System Bold" size="24.0" />
-                    </font>
-                </Label>
+                <!-- Header with Back Button -->
+                <HBox spacing="20.0" alignment="CENTER_LEFT">
+                    <children>
+                        <Button fx:id="btnBackToDashboard" mnemonicParsing="false" onAction="#handleBackToDashboard" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #3a86ff; -fx-text-fill: #ffffff; -fx-background-radius: 8; -fx-cursor: hand;" text="← Back">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                        </Button>
+                        <Label text="SUPPLIER MANAGEMENT" textFill="#3a86ff">
+                            <font>
+                                <Font name="System Bold" size="24.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </HBox>
 
                 <!-- Search Section -->
                 <HBox spacing="10.0" alignment="CENTER_LEFT">
@@ -30,7 +39,7 @@
                                 <Font size="14.0" />
                             </font>
                         </Label>
-                        <TextField fx:id="txtSearch" prefWidth="300.0" promptText="Search by supplier name..." style="-fx-background-color: #0f3460; -fx-text-fill: #ffffff; -fx-prompt-text-fill: #808080; -fx-background-radius: 5;">
+                        <TextField fx:id="txtSearch" prefWidth="300.0" promptText="Search by supplier name..." style="-fx-background-color: #2d3250; -fx-text-fill: #ffffff; -fx-prompt-text-fill: #808080; -fx-background-radius: 8; -fx-border-color: #3a86ff; -fx-border-radius: 8;">
                             <font>
                                 <Font size="14.0" />
                             </font>
@@ -39,7 +48,7 @@
                 </HBox>
 
                 <!-- Table Section -->
-                <TableView fx:id="tblSuppliers" prefHeight="250.0" style="-fx-background-color: #16213e; -fx-control-inner-background: #16213e; -fx-table-cell-border-color: #0f3460;">
+                <TableView fx:id="tblSuppliers" prefHeight="250.0" style="-fx-background-color: #2d3250; -fx-control-inner-background: #2d3250; -fx-table-cell-border-color: #1a1f36;">
                     <columns>
                         <TableColumn fx:id="colSupplierId" prefWidth="100.0" text="ID" style="-fx-alignment: CENTER;" />
                         <TableColumn fx:id="colName" prefWidth="200.0" text="Name" />
@@ -52,12 +61,12 @@
                 </TableView>
 
                 <!-- Form Section -->
-                <VBox spacing="15.0" style="-fx-background-color: #16213e; -fx-background-radius: 10;" >
+                <VBox spacing="15.0" style="-fx-background-color: #2d3250; -fx-background-radius: 10;">
                     <padding>
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                     </padding>
                     <children>
-                        <Label text="Supplier Details" textFill="#e94560">
+                        <Label text="Supplier Details" textFill="#3a86ff">
                             <font>
                                 <Font name="System Bold" size="16.0" />
                             </font>
@@ -72,7 +81,7 @@
                                                 <Font size="12.0" />
                                             </font>
                                         </Label>
-                                        <TextField fx:id="txtName" promptText="Enter supplier name" style="-fx-background-color: #0f3460; -fx-text-fill: #ffffff; -fx-prompt-text-fill: #808080; -fx-background-radius: 5;">
+                                        <TextField fx:id="txtName" promptText="Enter supplier name" style="-fx-background-color: #2d3250; -fx-text-fill: #ffffff; -fx-prompt-text-fill: #808080; -fx-background-radius: 8; -fx-border-color: #3a86ff; -fx-border-radius: 8;">
                                             <font>
                                                 <Font size="14.0" />
                                             </font>
@@ -87,7 +96,7 @@
                                                 <Font size="12.0" />
                                             </font>
                                         </Label>
-                                        <TextField fx:id="txtEmail" promptText="Enter email address" style="-fx-background-color: #0f3460; -fx-text-fill: #ffffff; -fx-prompt-text-fill: #808080; -fx-background-radius: 5;">
+                                        <TextField fx:id="txtEmail" promptText="Enter email address" style="-fx-background-color: #2d3250; -fx-text-fill: #ffffff; -fx-prompt-text-fill: #808080; -fx-background-radius: 8; -fx-border-color: #3a86ff; -fx-border-radius: 8;">
                                             <font>
                                                 <Font size="14.0" />
                                             </font>
@@ -102,7 +111,7 @@
                                                 <Font size="12.0" />
                                             </font>
                                         </Label>
-                                        <TextField fx:id="txtPhone" promptText="Enter phone number" style="-fx-background-color: #0f3460; -fx-text-fill: #ffffff; -fx-prompt-text-fill: #808080; -fx-background-radius: 5;">
+                                        <TextField fx:id="txtPhone" promptText="Enter phone number" style="-fx-background-color: #2d3250; -fx-text-fill: #ffffff; -fx-prompt-text-fill: #808080; -fx-background-radius: 8; -fx-border-color: #3a86ff; -fx-border-radius: 8;">
                                             <font>
                                                 <Font size="14.0" />
                                             </font>
@@ -118,22 +127,22 @@
                                 <Insets top="10.0" />
                             </VBox.margin>
                             <children>
-                                <Button fx:id="btnAdd" mnemonicParsing="false" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #4CAF50; -fx-text-fill: #ffffff; -fx-background-radius: 5; -fx-cursor: hand;" text="Add">
+                                <Button fx:id="btnAdd" mnemonicParsing="false" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #3a86ff; -fx-text-fill: #ffffff; -fx-background-radius: 8; -fx-cursor: hand;" text="Add">
                                     <font>
                                         <Font name="System Bold" size="13.0" />
                                     </font>
                                 </Button>
-                                <Button fx:id="btnUpdate" mnemonicParsing="false" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #2196F3; -fx-text-fill: #ffffff; -fx-background-radius: 5; -fx-cursor: hand;" text="Update">
+                                <Button fx:id="btnUpdate" mnemonicParsing="false" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #3a86ff; -fx-text-fill: #ffffff; -fx-background-radius: 8; -fx-cursor: hand;" text="Update">
                                     <font>
                                         <Font name="System Bold" size="13.0" />
                                     </font>
                                 </Button>
-                                <Button fx:id="btnDelete" mnemonicParsing="false" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #e94560; -fx-text-fill: #ffffff; -fx-background-radius: 5; -fx-cursor: hand;" text="Delete">
+                                <Button fx:id="btnDelete" mnemonicParsing="false" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #3a86ff; -fx-text-fill: #ffffff; -fx-background-radius: 8; -fx-cursor: hand;" text="Delete">
                                     <font>
                                         <Font name="System Bold" size="13.0" />
                                     </font>
                                 </Button>
-                                <Button fx:id="btnClear" mnemonicParsing="false" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #607D8B; -fx-text-fill: #ffffff; -fx-background-radius: 5; -fx-cursor: hand;" text="Clear">
+                                <Button fx:id="btnClear" mnemonicParsing="false" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #3a86ff; -fx-text-fill: #ffffff; -fx-background-radius: 8; -fx-cursor: hand;" text="Clear">
                                     <font>
                                         <Font name="System Bold" size="13.0" />
                                     </font>

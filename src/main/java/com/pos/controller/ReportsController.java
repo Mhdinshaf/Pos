@@ -1,11 +1,15 @@
 package com.pos.controller;
 
+import com.pos.model.Category;
 import com.pos.model.Order;
 import com.pos.model.Product;
+import com.pos.repository.impl.CategoryRepositoryImpl;
 import com.pos.repository.impl.OrderRepositoryImpl;
 import com.pos.repository.impl.ProductRepositoryImpl;
+import com.pos.service.CategoryService;
 import com.pos.service.OrderService;
 import com.pos.service.ProductService;
+import com.pos.service.impl.CategoryServiceImpl;
 import com.pos.service.impl.OrderServiceImpl;
 import com.pos.service.impl.ProductServiceImpl;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -13,93 +17,72 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ReportsController {
 
-    // Sales Report Components
-    @FXML
-    private DatePicker dpStartDate;
-
-    @FXML
-    private DatePicker dpEndDate;
-
-    @FXML
-    private Button btnGenerateReport;
-
-    @FXML
-    private TableView<Order> tblOrders;
-
-    @FXML
-    private TableColumn<Order, Integer> colOrderId;
-
-    @FXML
-    private TableColumn<Order, String> colOrderDate;
-
-    @FXML
-    private TableColumn<Order, Double> colTotalAmount;
-
-    @FXML
-    private Label lblTotalOrders;
-
-    @FXML
-    private Label lblTotalSales;
-
-    // Inventory Report Components
-    @FXML
-    private TextField txtSearch;
-
-    @FXML
-    private TableView<Product> tblInventory;
-
-    @FXML
-    private TableColumn<Product, Integer> colProductId;
-
-    @FXML
-    private TableColumn<Product, String> colProductName;
-
-    @FXML
-    private TableColumn<Product, String> colCategory;
-
-    @FXML
-    private TableColumn<Product, Integer> colQuantity;
-
-    @FXML
-    private TableColumn<Product, String> colPrice;
-
-    @FXML
-    private Label lblLowStockCount;
+    @FXML private DatePicker dpStartDate;
+    @FXML private DatePicker dpEndDate;
+    @FXML private Label lblTotalSales;
+    @FXML private Label lblTotalOrders;
+    @FXML private Label lblTotalProducts;
+    @FXML private Label lblLowStockItems;
+    @FXML private Label lblTotalStockValue;
+    @FXML private TableView<Order> tblSales;
+    @FXML private TableColumn<Order, Integer> colOrderId;
+    @FXML private TableColumn<Order, String> colOrderDate;
+    @FXML private TableColumn<Order, String> colTotalAmount;
+    @FXML private TableView<Product> tblInventory;
+    @FXML private TableColumn<Product, Integer> colProductId;
+    @FXML private TableColumn<Product, String> colProductName;
+    @FXML private TableColumn<Product, String> colCategory;
+    @FXML private TableColumn<Product, String> colPrice;
+    @FXML private TableColumn<Product, Integer> colQuantity;
+    @FXML private TableColumn<Product, String> colStockValue;
+    @FXML private Button btnGenerateReport;
+    @FXML private Button btnBackToDashboard;
 
     private final OrderService orderService;
     private final ProductService productService;
-    private ObservableList<Product> productList;
-    private FilteredList<Product> filteredProductList;
-
-    private static final int LOW_STOCK_THRESHOLD = 5;
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private final CategoryService categoryService;
+    private Map<Integer, String> categoryIdToName = new HashMap<>();
 
     public ReportsController() throws SQLException, ClassNotFoundException {
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         this.orderService = new OrderServiceImpl(new OrderRepositoryImpl(), productRepository);
         this.productService = new ProductServiceImpl(productRepository);
+        this.categoryService = new CategoryServiceImpl(new CategoryRepositoryImpl());
     }
 
     @FXML
     public void initialize() {
+        loadCategoryNames();
         setupDatePickers();
-        setupSalesTableColumns();
-        setupInventoryTableColumns();
-        setupInventoryRowFactory();
-        loadInventory();
-        setupSearch();
+        setupSalesTable();
+        setupInventoryTable();
         setupButtonActions();
+        loadInventorySummary();
+    }
+
+    private void loadCategoryNames() {
+        for (Category category : categoryService.getAllCategories()) {
+            categoryIdToName.put(category.getCategoryId(), category.getCategoryName());
+        }
     }
 
     private void setupDatePickers() {
@@ -107,74 +90,56 @@ public class ReportsController {
         dpEndDate.setValue(LocalDate.now());
     }
 
-    private void setupSalesTableColumns() {
-        colOrderId.setCellValueFactory(cellData -> 
-            new SimpleIntegerProperty(cellData.getValue().getOrderId()).asObject());
+    private void setupSalesTable() {
+        colOrderId.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getOrderId()).asObject());
         colOrderDate.setCellValueFactory(cellData -> {
-            if (cellData.getValue().getOrderDate() != null) {
-                return new SimpleStringProperty(cellData.getValue().getOrderDate().format(DATE_FORMATTER));
-            }
-            return new SimpleStringProperty("N/A");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            return new SimpleStringProperty(cellData.getValue().getOrderDate().format(formatter));
         });
-        colTotalAmount.setCellValueFactory(cellData -> 
-            new SimpleDoubleProperty(cellData.getValue().getTotalAmount()).asObject());
+        colTotalAmount.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("Rs. %.2f", cellData.getValue().getTotalAmount())));
     }
 
-    private void setupInventoryTableColumns() {
-        colProductId.setCellValueFactory(cellData -> 
-            new SimpleIntegerProperty(cellData.getValue().getProductId()).asObject());
-        colProductName.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(cellData.getValue().getName()));
+    private void setupInventoryTable() {
+        colProductId.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getProductId()).asObject());
+        colProductName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         colCategory.setCellValueFactory(cellData -> {
             Integer categoryId = cellData.getValue().getCategoryId();
-            return new SimpleStringProperty(categoryId != null ? "Category " + categoryId : "N/A");
+            String categoryName = categoryId != null ? categoryIdToName.getOrDefault(categoryId, "N/A") : "N/A";
+            return new SimpleStringProperty(categoryName);
         });
-        colQuantity.setCellValueFactory(cellData -> 
-            new SimpleIntegerProperty(cellData.getValue().getQuantity()).asObject());
-        colPrice.setCellValueFactory(cellData -> 
-            new SimpleStringProperty("Rs. " + cellData.getValue().getPrice().toString()));
-    }
-
-    private void setupInventoryRowFactory() {
-        tblInventory.setRowFactory(tv -> new TableRow<Product>() {
-            @Override
-            protected void updateItem(Product product, boolean empty) {
-                super.updateItem(product, empty);
-                if (empty || product == null) {
-                    setStyle("");
-                } else if (product.getQuantity() < LOW_STOCK_THRESHOLD) {
-                    setStyle("-fx-background-color: #8B0000;");
-                } else {
-                    setStyle("");
-                }
-            }
-        });
-    }
-
-    private void loadInventory() {
-        productList = FXCollections.observableArrayList(productService.getAllProducts());
-        filteredProductList = new FilteredList<>(productList, p -> true);
-        tblInventory.setItems(filteredProductList);
-        updateLowStockCount();
-    }
-
-    private void setupSearch() {
-        txtSearch.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredProductList.setPredicate(product -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-                String lowerCaseFilter = newValue.toLowerCase();
-                return product.getName().toLowerCase().contains(lowerCaseFilter);
-            });
+        colPrice.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("Rs. %.2f", cellData.getValue().getPrice())));
+        colQuantity.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getQuantity()).asObject());
+        colStockValue.setCellValueFactory(cellData -> {
+            BigDecimal price = cellData.getValue().getPrice();
+            int qty = cellData.getValue().getQuantity();
+            double value = price.doubleValue() * qty;
+            return new SimpleStringProperty(String.format("Rs. %.2f", value));
         });
     }
 
     private void setupButtonActions() {
-        btnGenerateReport.setOnAction(event -> handleGenerateReport());
+        btnGenerateReport.setOnAction(event -> generateSalesReport());
     }
 
-    private void handleGenerateReport() {
+    @FXML
+    private void handleBackToDashboard(ActionEvent event) {
+        navigateToDashboard();
+    }
+
+    private void navigateToDashboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Dashboard.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) btnBackToDashboard.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Clothify Store - Dashboard");
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load dashboard.");
+        }
+    }
+
+    private void generateSalesReport() {
         LocalDate startDate = dpStartDate.getValue();
         LocalDate endDate = dpEndDate.getValue();
 
@@ -189,19 +154,32 @@ public class ReportsController {
         }
 
         List<Order> orders = orderService.getOrdersByDateRange(startDate, endDate);
-        tblOrders.setItems(FXCollections.observableArrayList(orders));
+        ObservableList<Order> orderList = FXCollections.observableArrayList(orders);
+        tblSales.setItems(orderList);
 
-        // Calculate summary
-        int totalOrders = orders.size();
+        // Calculate totals
         double totalSales = orders.stream().mapToDouble(Order::getTotalAmount).sum();
+        int totalOrders = orders.size();
 
-        lblTotalOrders.setText(String.valueOf(totalOrders));
         lblTotalSales.setText(String.format("Rs. %.2f", totalSales));
+        lblTotalOrders.setText(String.valueOf(totalOrders));
     }
 
-    private void updateLowStockCount() {
-        List<Product> lowStockProducts = productService.getLowStockProducts(LOW_STOCK_THRESHOLD);
-        lblLowStockCount.setText(String.valueOf(lowStockProducts.size()));
+    private void loadInventorySummary() {
+        List<Product> products = productService.getAllProducts();
+        ObservableList<Product> productList = FXCollections.observableArrayList(products);
+        tblInventory.setItems(productList);
+
+        // Calculate inventory stats
+        int totalProducts = products.size();
+        int lowStockItems = (int) products.stream().filter(p -> p.getQuantity() < 5).count();
+        double totalStockValue = products.stream()
+                .mapToDouble(p -> p.getPrice().doubleValue() * p.getQuantity())
+                .sum();
+
+        lblTotalProducts.setText(String.valueOf(totalProducts));
+        lblLowStockItems.setText(String.valueOf(lowStockItems));
+        lblTotalStockValue.setText(String.format("Rs. %.2f", totalStockValue));
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {

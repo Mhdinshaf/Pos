@@ -8,18 +8,18 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #1a1a2e;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pos.controller.DashboardController">
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #1a1f36;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pos.controller.DashboardController">
     <children>
         <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <!-- Sidebar -->
-                <VBox prefWidth="220.0" spacing="5.0" style="-fx-background-color: #0f0f1a;">
+                <VBox prefWidth="220.0" spacing="5.0" style="-fx-background-color: #2d3250;">
                     <padding>
                         <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
                     </padding>
                     <children>
                         <!-- Logo/Title -->
-                        <Label text="CLOTHIFY" textFill="#e94560">
+                        <Label text="CLOTHIFY" textFill="#3a86ff">
                             <font>
                                 <Font name="System Bold" size="22.0" />
                             </font>
@@ -98,7 +98,7 @@
                         <VBox VBox.vgrow="ALWAYS" />
 
                         <!-- Logout Button -->
-                        <Button fx:id="btnLogout" maxWidth="Infinity" mnemonicParsing="false" prefHeight="40.0" style="-fx-background-color: #e94560; -fx-text-fill: #ffffff; -fx-background-radius: 5; -fx-cursor: hand;" text="Logout">
+                        <Button fx:id="btnLogout" maxWidth="Infinity" mnemonicParsing="false" prefHeight="40.0" style="-fx-background-color: #3a86ff; -fx-text-fill: #ffffff; -fx-background-radius: 8; -fx-cursor: hand;" text="Logout">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>
@@ -132,7 +132,7 @@
                         <HBox spacing="20.0">
                             <children>
                                 <!-- Total Products Card -->
-                                <VBox alignment="CENTER" prefHeight="120.0" prefWidth="170.0" spacing="10.0" style="-fx-background-color: #16213e; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
+                                <VBox alignment="CENTER" prefHeight="120.0" prefWidth="170.0" spacing="10.0" style="-fx-background-color: #2d3250; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
                                     <children>
                                         <Label text="📦" textFill="#4CAF50">
                                             <font>
@@ -156,7 +156,7 @@
                                 </VBox>
 
                                 <!-- Total Suppliers Card -->
-                                <VBox alignment="CENTER" prefHeight="120.0" prefWidth="170.0" spacing="10.0" style="-fx-background-color: #16213e; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
+                                <VBox alignment="CENTER" prefHeight="120.0" prefWidth="170.0" spacing="10.0" style="-fx-background-color: #2d3250; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
                                     <children>
                                         <Label text="🚚" textFill="#2196F3">
                                             <font>
@@ -180,7 +180,7 @@
                                 </VBox>
 
                                 <!-- Total Employees Card -->
-                                <VBox alignment="CENTER" prefHeight="120.0" prefWidth="170.0" spacing="10.0" style="-fx-background-color: #16213e; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
+                                <VBox alignment="CENTER" prefHeight="120.0" prefWidth="170.0" spacing="10.0" style="-fx-background-color: #2d3250; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
                                     <children>
                                         <Label text="👥" textFill="#FF9800">
                                             <font>
@@ -204,9 +204,9 @@
                                 </VBox>
 
                                 <!-- Today's Sales Card -->
-                                <VBox alignment="CENTER" prefHeight="120.0" prefWidth="170.0" spacing="10.0" style="-fx-background-color: #16213e; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
+                                <VBox alignment="CENTER" prefHeight="120.0" prefWidth="170.0" spacing="10.0" style="-fx-background-color: #2d3250; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <Label text="💰" textFill="#e94560">
+                                        <Label text="💰" textFill="#3a86ff">
                                             <font>
                                                 <Font size="28.0" />
                                             </font>
@@ -230,12 +230,12 @@
                         </HBox>
 
                         <!-- Quick Actions Section -->
-                        <VBox spacing="15.0" style="-fx-background-color: #16213e; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
+                        <VBox spacing="15.0" style="-fx-background-color: #2d3250; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
                             <padding>
                                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                             </padding>
                             <children>
-                                <Label text="Quick Actions" textFill="#e94560">
+                                <Label text="Quick Actions" textFill="#3a86ff">
                                     <font>
                                         <Font name="System Bold" size="18.0" />
                                     </font>
@@ -250,7 +250,7 @@
                                         <Insets top="10.0" />
                                     </VBox.margin>
                                     <children>
-                                        <VBox alignment="CENTER" prefWidth="150.0" spacing="8.0" style="-fx-background-color: #0f3460; -fx-background-radius: 8; -fx-cursor: hand;">
+                                        <VBox alignment="CENTER" prefWidth="150.0" spacing="8.0" style="-fx-background-color: #1a1f36; -fx-background-radius: 8; -fx-cursor: hand;">
                                             <padding>
                                                 <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                             </padding>
@@ -267,7 +267,7 @@
                                                 </Label>
                                             </children>
                                         </VBox>
-                                        <VBox alignment="CENTER" prefWidth="150.0" spacing="8.0" style="-fx-background-color: #0f3460; -fx-background-radius: 8; -fx-cursor: hand;">
+                                        <VBox alignment="CENTER" prefWidth="150.0" spacing="8.0" style="-fx-background-color: #1a1f36; -fx-background-radius: 8; -fx-cursor: hand;">
                                             <padding>
                                                 <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                             </padding>
@@ -284,7 +284,7 @@
                                                 </Label>
                                             </children>
                                         </VBox>
-                                        <VBox alignment="CENTER" prefWidth="150.0" spacing="8.0" style="-fx-background-color: #0f3460; -fx-background-radius: 8; -fx-cursor: hand;">
+                                        <VBox alignment="CENTER" prefWidth="150.0" spacing="8.0" style="-fx-background-color: #1a1f36; -fx-background-radius: 8; -fx-cursor: hand;">
                                             <padding>
                                                 <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                                             </padding>

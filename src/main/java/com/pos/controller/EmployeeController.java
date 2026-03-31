@@ -9,58 +9,36 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
 
 public class EmployeeController {
 
-    @FXML
-    private TableView<Employee> tblEmployees;
-
-    @FXML
-    private TableColumn<Employee, Integer> colEmployeeId;
-
-    @FXML
-    private TableColumn<Employee, String> colName;
-
-    @FXML
-    private TableColumn<Employee, String> colRole;
-
-    @FXML
-    private TableColumn<Employee, String> colEmail;
-
-    @FXML
-    private TableColumn<Employee, String> colPhone;
-
-    @FXML
-    private TextField txtName;
-
-    @FXML
-    private ComboBox<String> cmbRole;
-
-    @FXML
-    private TextField txtEmail;
-
-    @FXML
-    private TextField txtPhone;
-
-    @FXML
-    private TextField txtSearch;
-
-    @FXML
-    private Button btnAdd;
-
-    @FXML
-    private Button btnUpdate;
-
-    @FXML
-    private Button btnDelete;
-
-    @FXML
-    private Button btnClear;
+    @FXML private TableView<Employee> tblEmployees;
+    @FXML private TableColumn<Employee, Integer> colEmployeeId;
+    @FXML private TableColumn<Employee, String> colName;
+    @FXML private TableColumn<Employee, String> colRole;
+    @FXML private TableColumn<Employee, String> colEmail;
+    @FXML private TableColumn<Employee, String> colPhone;
+    @FXML private TextField txtName;
+    @FXML private ComboBox<String> cmbRole;
+    @FXML private TextField txtEmail;
+    @FXML private TextField txtPhone;
+    @FXML private TextField txtSearch;
+    @FXML private Button btnAdd;
+    @FXML private Button btnUpdate;
+    @FXML private Button btnDelete;
+    @FXML private Button btnClear;
+    @FXML private Button btnBackToDashboard;
 
     private final EmployeeService employeeService;
     private ObservableList<Employee> employeeList;
@@ -83,20 +61,14 @@ public class EmployeeController {
 
     private void setupRoleComboBox() {
         cmbRole.setItems(FXCollections.observableArrayList("ADMIN", "STAFF"));
-        cmbRole.setPromptText("Select Role");
     }
 
     private void setupTableColumns() {
-        colEmployeeId.setCellValueFactory(cellData -> 
-            new SimpleIntegerProperty(cellData.getValue().getEmployeeId()).asObject());
-        colName.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(cellData.getValue().getName()));
-        colRole.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(cellData.getValue().getRole()));
-        colEmail.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(cellData.getValue().getEmail()));
-        colPhone.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(cellData.getValue().getPhone()));
+        colEmployeeId.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getEmployeeId()).asObject());
+        colName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
+        colRole.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRole()));
+        colEmail.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail()));
+        colPhone.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPhone()));
     }
 
     private void loadEmployees() {
@@ -120,11 +92,8 @@ public class EmployeeController {
     private void setupSearch() {
         txtSearch.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredList.setPredicate(employee -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-                String lowerCaseFilter = newValue.toLowerCase();
-                return employee.getName().toLowerCase().contains(lowerCaseFilter);
+                if (newValue == null || newValue.isEmpty()) return true;
+                return employee.getName().toLowerCase().contains(newValue.toLowerCase());
             });
         });
     }
@@ -136,15 +105,31 @@ public class EmployeeController {
         btnClear.setOnAction(event -> handleClear());
     }
 
+    @FXML
+    private void handleBackToDashboard(ActionEvent event) {
+        navigateToDashboard();
+    }
+
+    private void navigateToDashboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Dashboard.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) btnBackToDashboard.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Clothify Store - Dashboard");
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load dashboard.");
+        }
+    }
+
     private void handleAdd() {
         String name = txtName.getText().trim();
         String role = cmbRole.getValue();
         String email = txtEmail.getText().trim();
         String phone = txtPhone.getText().trim();
 
-        if (!validateInputs(name, role, phone)) {
-            return;
-        }
+        if (!validateInputs(name, role, email, phone)) return;
 
         boolean success = employeeService.addEmployee(name, role, email, phone);
         if (success) {
@@ -167,9 +152,7 @@ public class EmployeeController {
         String email = txtEmail.getText().trim();
         String phone = txtPhone.getText().trim();
 
-        if (!validateInputs(name, role, phone)) {
-            return;
-        }
+        if (!validateInputs(name, role, email, phone)) return;
 
         selectedEmployee.setName(name);
         selectedEmployee.setRole(role);
@@ -213,7 +196,6 @@ public class EmployeeController {
     private void handleClear() {
         txtName.clear();
         cmbRole.setValue(null);
-        cmbRole.setPromptText("Select Role");
         txtEmail.clear();
         txtPhone.clear();
         txtSearch.clear();
@@ -221,13 +203,17 @@ public class EmployeeController {
         tblEmployees.getSelectionModel().clearSelection();
     }
 
-    private boolean validateInputs(String name, String role, String phone) {
+    private boolean validateInputs(String name, String role, String email, String phone) {
         if (name.isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation Error", "Name is required.");
             return false;
         }
         if (role == null || role.isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation Error", "Role is required.");
+            return false;
+        }
+        if (email.isEmpty() || !email.contains("@")) {
+            showAlert(Alert.AlertType.WARNING, "Validation Error", "Valid email is required.");
             return false;
         }
         if (phone.isEmpty()) {

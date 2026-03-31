@@ -34,59 +34,24 @@ import java.util.Optional;
 
 public class ProductController {
 
-    @FXML
-    private TableView<Product> tblProducts;
-
-    @FXML
-    private TableColumn<Product, Integer> colProductId;
-
-    @FXML
-    private TableColumn<Product, String> colName;
-
-    @FXML
-    private TableColumn<Product, String> colCategory;
-
-    @FXML
-    private TableColumn<Product, String> colPrice;
-
-    @FXML
-    private TableColumn<Product, Integer> colQuantity;
-
-    @FXML
-    private TableColumn<Product, String> colSupplier;
-
-    @FXML
-    private TextField txtName;
-
-    @FXML
-    private ComboBox<String> cmbCategory;
-
-    @FXML
-    private TextField txtPrice;
-
-    @FXML
-    private TextField txtQuantity;
-
-    @FXML
-    private ComboBox<String> cmbSupplier;
-
-    @FXML
-    private TextField txtSearch;
-
-    @FXML
-    private Button btnAdd;
-
-    @FXML
-    private Button btnUpdate;
-
-    @FXML
-    private Button btnDelete;
-
-    @FXML
-    private Button btnClear;
-
-    @FXML
-    private Button btnBackToDashboard;
+    @FXML private TableView<Product> tblProducts;
+    @FXML private TableColumn<Product, Integer> colProductId;
+    @FXML private TableColumn<Product, String> colName;
+    @FXML private TableColumn<Product, String> colCategory;
+    @FXML private TableColumn<Product, String> colPrice;
+    @FXML private TableColumn<Product, Integer> colQuantity;
+    @FXML private TableColumn<Product, String> colSupplier;
+    @FXML private TextField txtName;
+    @FXML private ComboBox<String> cmbCategory;
+    @FXML private TextField txtPrice;
+    @FXML private TextField txtQuantity;
+    @FXML private ComboBox<String> cmbSupplier;
+    @FXML private TextField txtSearch;
+    @FXML private Button btnAdd;
+    @FXML private Button btnUpdate;
+    @FXML private Button btnDelete;
+    @FXML private Button btnClear;
+    @FXML private Button btnBackToDashboard;
 
     private final ProductService productService;
     private final CategoryService categoryService;
@@ -142,19 +107,15 @@ public class ProductController {
     }
 
     private void setupTableColumns() {
-        colProductId.setCellValueFactory(cellData ->
-            new SimpleIntegerProperty(cellData.getValue().getProductId()).asObject());
-        colName.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getName()));
+        colProductId.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getProductId()).asObject());
+        colName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         colCategory.setCellValueFactory(cellData -> {
             Integer categoryId = cellData.getValue().getCategoryId();
             String categoryName = categoryId != null ? categoryIdToName.getOrDefault(categoryId, "N/A") : "N/A";
             return new SimpleStringProperty(categoryName);
         });
-        colPrice.setCellValueFactory(cellData ->
-            new SimpleStringProperty(String.format("Rs. %.2f", cellData.getValue().getPrice())));
-        colQuantity.setCellValueFactory(cellData ->
-            new SimpleIntegerProperty(cellData.getValue().getQuantity()).asObject());
+        colPrice.setCellValueFactory(cellData -> new SimpleStringProperty(String.format("Rs. %.2f", cellData.getValue().getPrice())));
+        colQuantity.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getQuantity()).asObject());
         colSupplier.setCellValueFactory(cellData -> {
             Integer supplierId = cellData.getValue().getSupplierId();
             String supplierName = supplierId != null ? supplierIdToName.getOrDefault(supplierId, "N/A") : "N/A";
@@ -175,17 +136,13 @@ public class ProductController {
                 txtName.setText(newSelection.getName());
                 txtPrice.setText(newSelection.getPrice().toString());
                 txtQuantity.setText(String.valueOf(newSelection.getQuantity()));
-
                 if (newSelection.getCategoryId() != null) {
-                    String categoryName = categoryIdToName.get(newSelection.getCategoryId());
-                    cmbCategory.setValue(categoryName);
+                    cmbCategory.setValue(categoryIdToName.get(newSelection.getCategoryId()));
                 } else {
                     cmbCategory.setValue(null);
                 }
-
                 if (newSelection.getSupplierId() != null) {
-                    String supplierName = supplierIdToName.get(newSelection.getSupplierId());
-                    cmbSupplier.setValue(supplierName);
+                    cmbSupplier.setValue(supplierIdToName.get(newSelection.getSupplierId()));
                 } else {
                     cmbSupplier.setValue(null);
                 }
@@ -196,11 +153,8 @@ public class ProductController {
     private void setupSearch() {
         txtSearch.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredList.setPredicate(product -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-                String lowerCaseFilter = newValue.toLowerCase();
-                return product.getName().toLowerCase().contains(lowerCaseFilter);
+                if (newValue == null || newValue.isEmpty()) return true;
+                return product.getName().toLowerCase().contains(newValue.toLowerCase());
             });
         });
     }
@@ -214,6 +168,10 @@ public class ProductController {
 
     @FXML
     private void handleBackToDashboard(ActionEvent event) {
+        navigateToDashboard();
+    }
+
+    private void navigateToDashboard() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Dashboard.fxml"));
             Parent root = loader.load();
@@ -233,9 +191,7 @@ public class ProductController {
         String categoryName = cmbCategory.getValue();
         String supplierName = cmbSupplier.getValue();
 
-        if (!validateInputs(name, priceText, quantityText)) {
-            return;
-        }
+        if (!validateInputs(name, priceText, quantityText)) return;
 
         try {
             BigDecimal price = new BigDecimal(priceText);
@@ -270,21 +226,14 @@ public class ProductController {
         String categoryName = cmbCategory.getValue();
         String supplierName = cmbSupplier.getValue();
 
-        if (!validateInputs(name, priceText, quantityText)) {
-            return;
-        }
+        if (!validateInputs(name, priceText, quantityText)) return;
 
         try {
-            BigDecimal price = new BigDecimal(priceText);
-            int quantity = Integer.parseInt(quantityText);
-            Integer categoryId = categoryName != null ? categoryMap.get(categoryName) : null;
-            Integer supplierId = supplierName != null ? supplierMap.get(supplierName) : null;
-
             selectedProduct.setName(name);
-            selectedProduct.setCategoryId(categoryId);
-            selectedProduct.setPrice(price);
-            selectedProduct.setQuantity(quantity);
-            selectedProduct.setSupplierId(supplierId);
+            selectedProduct.setCategoryId(categoryName != null ? categoryMap.get(categoryName) : null);
+            selectedProduct.setPrice(new BigDecimal(priceText));
+            selectedProduct.setQuantity(Integer.parseInt(quantityText));
+            selectedProduct.setSupplierId(supplierName != null ? supplierMap.get(supplierName) : null);
 
             boolean success = productService.updateProduct(selectedProduct);
 

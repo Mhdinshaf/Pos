@@ -23,35 +23,16 @@ import java.util.Optional;
 
 public class CategoryController {
 
-    @FXML
-    private TableView<Category> tblCategories;
-
-    @FXML
-    private TableColumn<Category, Integer> colCategoryId;
-
-    @FXML
-    private TableColumn<Category, String> colCategoryName;
-
-    @FXML
-    private TextField txtCategoryName;
-
-    @FXML
-    private TextField txtSearch;
-
-    @FXML
-    private Button btnAdd;
-
-    @FXML
-    private Button btnUpdate;
-
-    @FXML
-    private Button btnDelete;
-
-    @FXML
-    private Button btnClear;
-
-    @FXML
-    private Button btnBackToDashboard;
+    @FXML private TableView<Category> tblCategories;
+    @FXML private TableColumn<Category, Integer> colCategoryId;
+    @FXML private TableColumn<Category, String> colCategoryName;
+    @FXML private TextField txtCategoryName;
+    @FXML private TextField txtSearch;
+    @FXML private Button btnAdd;
+    @FXML private Button btnUpdate;
+    @FXML private Button btnDelete;
+    @FXML private Button btnClear;
+    @FXML private Button btnBackToDashboard;
 
     private final CategoryService categoryService;
     private ObservableList<Category> categoryList;
@@ -72,10 +53,8 @@ public class CategoryController {
     }
 
     private void setupTableColumns() {
-        colCategoryId.setCellValueFactory(cellData ->
-            new SimpleIntegerProperty(cellData.getValue().getCategoryId()).asObject());
-        colCategoryName.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getCategoryName()));
+        colCategoryId.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getCategoryId()).asObject());
+        colCategoryName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCategoryName()));
     }
 
     private void loadCategories() {
@@ -96,11 +75,8 @@ public class CategoryController {
     private void setupSearch() {
         txtSearch.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredList.setPredicate(category -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-                String lowerCaseFilter = newValue.toLowerCase();
-                return category.getCategoryName().toLowerCase().contains(lowerCaseFilter);
+                if (newValue == null || newValue.isEmpty()) return true;
+                return category.getCategoryName().toLowerCase().contains(newValue.toLowerCase());
             });
         });
     }
@@ -114,6 +90,10 @@ public class CategoryController {
 
     @FXML
     private void handleBackToDashboard(ActionEvent event) {
+        navigateToDashboard();
+    }
+
+    private void navigateToDashboard() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Dashboard.fxml"));
             Parent root = loader.load();
@@ -128,7 +108,6 @@ public class CategoryController {
 
     private void handleAdd() {
         String categoryName = txtCategoryName.getText().trim();
-
         if (categoryName.isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation Error", "Category name is required.");
             return;
@@ -151,7 +130,6 @@ public class CategoryController {
         }
 
         String categoryName = txtCategoryName.getText().trim();
-
         if (categoryName.isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation Error", "Category name is required.");
             return;
@@ -186,7 +164,7 @@ public class CategoryController {
                 loadCategories();
                 handleClear();
             } else {
-                showAlert(Alert.AlertType.ERROR, "Error", "Failed to delete category. It may be in use by products.");
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to delete category.");
             }
         }
     }

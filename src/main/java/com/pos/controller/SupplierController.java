@@ -9,52 +9,34 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
 
 public class SupplierController {
 
-    @FXML
-    private TableView<Supplier> tblSuppliers;
-
-    @FXML
-    private TableColumn<Supplier, Integer> colSupplierId;
-
-    @FXML
-    private TableColumn<Supplier, String> colName;
-
-    @FXML
-    private TableColumn<Supplier, String> colEmail;
-
-    @FXML
-    private TableColumn<Supplier, String> colPhone;
-
-    @FXML
-    private TextField txtName;
-
-    @FXML
-    private TextField txtEmail;
-
-    @FXML
-    private TextField txtPhone;
-
-    @FXML
-    private TextField txtSearch;
-
-    @FXML
-    private Button btnAdd;
-
-    @FXML
-    private Button btnUpdate;
-
-    @FXML
-    private Button btnDelete;
-
-    @FXML
-    private Button btnClear;
+    @FXML private TableView<Supplier> tblSuppliers;
+    @FXML private TableColumn<Supplier, Integer> colSupplierId;
+    @FXML private TableColumn<Supplier, String> colName;
+    @FXML private TableColumn<Supplier, String> colEmail;
+    @FXML private TableColumn<Supplier, String> colPhone;
+    @FXML private TextField txtName;
+    @FXML private TextField txtEmail;
+    @FXML private TextField txtPhone;
+    @FXML private TextField txtSearch;
+    @FXML private Button btnAdd;
+    @FXML private Button btnUpdate;
+    @FXML private Button btnDelete;
+    @FXML private Button btnClear;
+    @FXML private Button btnBackToDashboard;
 
     private final SupplierService supplierService;
     private ObservableList<Supplier> supplierList;
@@ -75,14 +57,10 @@ public class SupplierController {
     }
 
     private void setupTableColumns() {
-        colSupplierId.setCellValueFactory(cellData -> 
-            new SimpleIntegerProperty(cellData.getValue().getSupplierId()).asObject());
-        colName.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(cellData.getValue().getName()));
-        colEmail.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(cellData.getValue().getEmail()));
-        colPhone.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(cellData.getValue().getPhone()));
+        colSupplierId.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getSupplierId()).asObject());
+        colName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
+        colEmail.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail()));
+        colPhone.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPhone()));
     }
 
     private void loadSuppliers() {
@@ -105,11 +83,8 @@ public class SupplierController {
     private void setupSearch() {
         txtSearch.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredList.setPredicate(supplier -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-                String lowerCaseFilter = newValue.toLowerCase();
-                return supplier.getName().toLowerCase().contains(lowerCaseFilter);
+                if (newValue == null || newValue.isEmpty()) return true;
+                return supplier.getName().toLowerCase().contains(newValue.toLowerCase());
             });
         });
     }
@@ -121,14 +96,30 @@ public class SupplierController {
         btnClear.setOnAction(event -> handleClear());
     }
 
+    @FXML
+    private void handleBackToDashboard(ActionEvent event) {
+        navigateToDashboard();
+    }
+
+    private void navigateToDashboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Dashboard.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) btnBackToDashboard.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Clothify Store - Dashboard");
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load dashboard.");
+        }
+    }
+
     private void handleAdd() {
         String name = txtName.getText().trim();
         String email = txtEmail.getText().trim();
         String phone = txtPhone.getText().trim();
 
-        if (!validateInputs(name, email, phone)) {
-            return;
-        }
+        if (!validateInputs(name, email, phone)) return;
 
         boolean success = supplierService.addSupplier(name, email, phone);
         if (success) {
@@ -150,9 +141,7 @@ public class SupplierController {
         String email = txtEmail.getText().trim();
         String phone = txtPhone.getText().trim();
 
-        if (!validateInputs(name, email, phone)) {
-            return;
-        }
+        if (!validateInputs(name, email, phone)) return;
 
         selectedSupplier.setName(name);
         selectedSupplier.setEmail(email);

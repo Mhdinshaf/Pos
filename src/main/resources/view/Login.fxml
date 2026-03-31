@@ -10,14 +10,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="500.0" style="-fx-background-color: #1a1a2e;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pos.controller.LoginController">
+<AnchorPane prefHeight="400.0" prefWidth="500.0" style="-fx-background-color: #1a1f36;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pos.controller.LoginController">
     <children>
-        <VBox alignment="CENTER" layoutX="100.0" layoutY="50.0" prefHeight="300.0" prefWidth="300.0" spacing="15.0" style="-fx-background-color: #16213e; -fx-background-radius: 10;" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="50.0">
+        <VBox alignment="CENTER" layoutX="100.0" layoutY="50.0" prefHeight="300.0" prefWidth="300.0" spacing="15.0" style="-fx-background-color: #2d3250; -fx-background-radius: 10;" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="50.0">
             <padding>
                 <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
             </padding>
             <children>
-                <Label text="CLOTHIFY STORE" textFill="#e94560">
+                <Label text="CLOTHIFY STORE" textFill="#3a86ff">
                     <font>
                         <Font name="System Bold" size="24.0" />
                     </font>
@@ -35,7 +35,7 @@
                                 <Font size="12.0" />
                             </font>
                         </Label>
-                        <TextField fx:id="txtUsername" promptText="Enter username" style="-fx-background-color: #0f3460; -fx-text-fill: #ffffff; -fx-prompt-text-fill: #808080; -fx-background-radius: 5;">
+                        <TextField fx:id="txtUsername" promptText="Enter username" style="-fx-background-color: #2d3250; -fx-text-fill: #ffffff; -fx-prompt-text-fill: #808080; -fx-background-radius: 8; -fx-border-color: #3a86ff; -fx-border-radius: 8;">
                             <font>
                                 <Font size="14.0" />
                             </font>
@@ -53,7 +53,7 @@
                                 <Font size="12.0" />
                             </font>
                         </Label>
-                        <PasswordField fx:id="txtPassword" promptText="Enter password" style="-fx-background-color: #0f3460; -fx-text-fill: #ffffff; -fx-prompt-text-fill: #808080; -fx-background-radius: 5;">
+                        <PasswordField fx:id="txtPassword" promptText="Enter password" style="-fx-background-color: #2d3250; -fx-text-fill: #ffffff; -fx-prompt-text-fill: #808080; -fx-background-radius: 8; -fx-border-color: #3a86ff; -fx-border-radius: 8;">
                             <font>
                                 <Font size="14.0" />
                             </font>
@@ -61,7 +61,7 @@
                     </children>
                 </VBox>
                 
-                <Button fx:id="btnLogin" maxWidth="Infinity" mnemonicParsing="false" prefHeight="35.0" style="-fx-background-color: #e94560; -fx-text-fill: #ffffff; -fx-background-radius: 5; -fx-cursor: hand;" text="LOGIN">
+                <Button fx:id="btnLogin" maxWidth="Infinity" mnemonicParsing="false" prefHeight="35.0" style="-fx-background-color: #3a86ff; -fx-text-fill: #ffffff; -fx-background-radius: 8; -fx-cursor: hand;" text="LOGIN">
                     <font>
                         <Font name="System Bold" size="14.0" />
                     </font>
@@ -70,7 +70,7 @@
                     </VBox.margin>
                 </Button>
                 
-                <Hyperlink fx:id="linkSignUp" style="-fx-text-fill: #e94560;" text="Don't have an account? Sign Up">
+                <Hyperlink fx:id="linkSignUp" style="-fx-text-fill: #3a86ff;" text="Don't have an account? Sign Up">
                     <font>
                         <Font size="11.0" />
                     </font>
