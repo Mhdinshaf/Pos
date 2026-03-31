@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #1a1a2e;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pos.controller.InventoryController">
+    <children>
+        <VBox spacing="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+            <children>
+                <!-- Header -->
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <children>
+                        <Label text="INVENTORY MANAGEMENT" textFill="#e94560">
+                            <font>
+                                <Font name="System Bold" size="24.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="lblLowStockCount" style="-fx-background-color: #8B0000; -fx-padding: 5 10 5 10; -fx-background-radius: 5;" text="Low Stock Items: 0" textFill="#ffffff">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </HBox>
+
+                <!-- Search Section -->
+                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                    <children>
+                        <Label text="Search:" textFill="#ffffff">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="txtSearch" prefWidth="300.0" promptText="Search by product name..." style="-fx-background-color: #0f3460; -fx-text-fill: #ffffff; -fx-prompt-text-fill: #808080; -fx-background-radius: 5;">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </TextField>
+                    </children>
+                </HBox>
+
+                <!-- Table Section -->
+                <TableView fx:id="tblProducts" prefHeight="300.0" style="-fx-background-color: #16213e; -fx-control-inner-background: #16213e; -fx-table-cell-border-color: #0f3460;">
+                    <columns>
+                        <TableColumn fx:id="colProductId" prefWidth="80.0" text="ID" style="-fx-alignment: CENTER;" />
+                        <TableColumn fx:id="colName" prefWidth="200.0" text="Product Name" />
+                        <TableColumn fx:id="colCategory" prefWidth="150.0" text="Category" />
+                        <TableColumn fx:id="colPrice" prefWidth="120.0" text="Price" style="-fx-alignment: CENTER_RIGHT;" />
+                        <TableColumn fx:id="colQuantity" prefWidth="100.0" text="Quantity" style="-fx-alignment: CENTER;" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+
+                <!-- Stock Update Section -->
+                <VBox spacing="15.0" style="-fx-background-color: #16213e; -fx-background-radius: 10;">
+                    <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                    </padding>
+                    <children>
+                        <Label text="Update Stock" textFill="#e94560">
+                            <font>
+                                <Font name="System Bold" size="16.0" />
+                            </font>
+                        </Label>
+
+                        <Label fx:id="lblSelectedProduct" text="No product selected" textFill="#a0a0a0">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+
+                        <HBox spacing="20.0" alignment="CENTER_LEFT">
+                            <children>
+                                <VBox spacing="5.0">
+                                    <children>
+                                        <Label text="New Quantity" textFill="#ffffff">
+                                            <font>
+                                                <Font size="12.0" />
+                                            </font>
+                                        </Label>
+                                        <TextField fx:id="txtNewQuantity" prefWidth="200.0" promptText="Enter new quantity" style="-fx-background-color: #0f3460; -fx-text-fill: #ffffff; -fx-prompt-text-fill: #808080; -fx-background-radius: 5;">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </TextField>
+                                    </children>
+                                </VBox>
+
+                                <Button fx:id="btnUpdateStock" mnemonicParsing="false" prefHeight="35.0" prefWidth="150.0" style="-fx-background-color: #4CAF50; -fx-text-fill: #ffffff; -fx-background-radius: 5; -fx-cursor: hand;" text="Update Stock">
+                                    <font>
+                                        <Font name="System Bold" size="13.0" />
+                                    </font>
+                                    <HBox.margin>
+                                        <Insets top="20.0" />
+                                    </HBox.margin>
+                                </Button>
+                            </children>
+                        </HBox>
+
+                        <!-- Low Stock Legend -->
+                        <HBox spacing="10.0" alignment="CENTER_LEFT">
+                            <VBox.margin>
+                                <Insets top="10.0" />
+                            </VBox.margin>
+                            <children>
+                                <Label style="-fx-background-color: #8B0000; -fx-padding: 3 8 3 8; -fx-background-radius: 3;" text="  " />
+                                <Label text="= Low Stock (less than 5 items)" textFill="#a0a0a0">
+                                    <font>
+                                        <Font size="11.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
