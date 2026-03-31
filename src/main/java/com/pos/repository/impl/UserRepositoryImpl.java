@@ -2,7 +2,7 @@ package com.pos.repository.impl;
 
 import com.pos.model.User;
 import com.pos.repository.UserRepository;
-import com.pos.util.DBConnection;
+import org.Pos.db.DbConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,8 +13,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     private final Connection connection;
 
-    public UserRepositoryImpl() {
-        this.connection = DBConnection.getInstance().getConnection();
+    public UserRepositoryImpl() throws SQLException, ClassNotFoundException {
+        this.connection = DbConnection.getInstance().getConnection();
     }
 
     @Override
