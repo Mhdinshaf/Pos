@@ -70,4 +70,4 @@ CREATE TABLE order_item (
 -- Insert default admin user
 -- Password: admin123 (SHA-256 hashed)
 INSERT INTO user (username, password, role) VALUES 
-('admin', '240be518fabd2724ddb6f04eeb9d5b2646cb88c8a22353ebc40e37e58d5e9b47', 'ADMIN');
+('admin', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 'ADMIN');

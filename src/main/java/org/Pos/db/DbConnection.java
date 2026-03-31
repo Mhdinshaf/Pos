@@ -11,7 +11,7 @@ public class DbConnection {
 
     private DbConnection() throws SQLException, ClassNotFoundException {
         try {
-            connection= DriverManager.getConnection("jdbc:mysql://localhost:3306/pos_system","root","");
+            connection= DriverManager.getConnection("jdbc:mysql://localhost:3306/clothify_store","root","");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

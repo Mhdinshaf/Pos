@@ -54,12 +54,16 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    /**
+     * Hashes a password using SHA-256 algorithm via MessageDigest.
+     * Returns lowercase hexadecimal string representation of the hash.
+     */
     private String hashPassword(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hash) {
+            byte[] hashBytes = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder(64);
+            for (byte b : hashBytes) {
                 String hex = Integer.toHexString(0xff & b);
                 if (hex.length() == 1) {
                     hexString.append('0');

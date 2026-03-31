@@ -18,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class RegisterController {
 
@@ -41,7 +42,7 @@ public class RegisterController {
 
     private final UserService userService;
 
-    public RegisterController() {
+    public RegisterController() throws SQLException, ClassNotFoundException {
         this.userService = new UserServiceImpl(new UserRepositoryImpl());
     }
 
