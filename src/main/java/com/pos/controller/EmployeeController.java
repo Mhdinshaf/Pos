@@ -75,6 +75,12 @@ public class EmployeeController {
         employeeList = FXCollections.observableArrayList(employeeService.getAllEmployees());
         filteredList = new FilteredList<>(employeeList, p -> true);
         tblEmployees.setItems(filteredList);
+        tblEmployees.refresh();
+        // Reapply search filter if exists
+        String searchText = txtSearch.getText();
+        if (searchText != null && !searchText.isEmpty()) {
+            filteredList.setPredicate(employee -> employee.getName().toLowerCase().contains(searchText.toLowerCase()));
+        }
     }
 
     private void setupTableSelection() {
@@ -198,9 +204,9 @@ public class EmployeeController {
         cmbRole.setValue(null);
         txtEmail.clear();
         txtPhone.clear();
-        txtSearch.clear();
         selectedEmployee = null;
         tblEmployees.getSelectionModel().clearSelection();
+        tblEmployees.refresh();
     }
 
     private boolean validateInputs(String name, String role, String email, String phone) {

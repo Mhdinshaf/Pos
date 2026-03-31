@@ -61,6 +61,12 @@ public class CategoryController {
         categoryList = FXCollections.observableArrayList(categoryService.getAllCategories());
         filteredList = new FilteredList<>(categoryList, p -> true);
         tblCategories.setItems(filteredList);
+        tblCategories.refresh();
+        // Reapply search filter if exists
+        String searchText = txtSearch.getText();
+        if (searchText != null && !searchText.isEmpty()) {
+            filteredList.setPredicate(category -> category.getCategoryName().toLowerCase().contains(searchText.toLowerCase()));
+        }
     }
 
     private void setupTableSelection() {
@@ -171,9 +177,9 @@ public class CategoryController {
 
     private void handleClear() {
         txtCategoryName.clear();
-        txtSearch.clear();
         selectedCategory = null;
         tblCategories.getSelectionModel().clearSelection();
+        tblCategories.refresh();
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {

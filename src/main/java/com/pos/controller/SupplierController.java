@@ -67,6 +67,12 @@ public class SupplierController {
         supplierList = FXCollections.observableArrayList(supplierService.getAllSuppliers());
         filteredList = new FilteredList<>(supplierList, p -> true);
         tblSuppliers.setItems(filteredList);
+        tblSuppliers.refresh();
+        // Reapply search filter if exists
+        String searchText = txtSearch.getText();
+        if (searchText != null && !searchText.isEmpty()) {
+            filteredList.setPredicate(supplier -> supplier.getName().toLowerCase().contains(searchText.toLowerCase()));
+        }
     }
 
     private void setupTableSelection() {
@@ -185,9 +191,9 @@ public class SupplierController {
         txtName.clear();
         txtEmail.clear();
         txtPhone.clear();
-        txtSearch.clear();
         selectedSupplier = null;
         tblSuppliers.getSelectionModel().clearSelection();
+        tblSuppliers.refresh();
     }
 
     private boolean validateInputs(String name, String email, String phone) {

@@ -24,13 +24,12 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class OrderController {
 
-    @FXML private ComboBox<String> cmbProduct;
+    @FXML private TextField txtProductSearch;
+    @FXML private ComboBox<Product> cmbProduct;
     @FXML private TextField txtQuantity;
     @FXML private Label lblProductPrice;
     @FXML private Label lblAvailableStock;
@@ -50,7 +49,7 @@ public class OrderController {
     private final ProductService productService;
     private final OrderService orderService;
     private ObservableList<CartItem> cartItems = FXCollections.observableArrayList();
-    private Map<String, Product> productMap = new HashMap<>();
+    private ObservableList<Product> allProducts = FXCollections.observableArrayList();
 
     public OrderController() throws SQLException, ClassNotFoundException {
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
@@ -61,6 +60,8 @@ public class OrderController {
     @FXML
     public void initialize() {
         loadProducts();
+        setupProductComboBox();
+        setupProductSearch();
         setupCartTable();
         setupProductSelection();
         setupButtonActions();
@@ -68,15 +69,64 @@ public class OrderController {
     }
 
     private void loadProducts() {
-        productMap.clear();
-        ObservableList<String> productNames = FXCollections.observableArrayList();
+        allProducts.clear();
         for (Product product : productService.getAllProducts()) {
             if (product.getQuantity() > 0) {
-                productMap.put(product.getName(), product);
-                productNames.add(product.getName());
+                allProducts.add(product);
             }
         }
-        cmbProduct.setItems(productNames);
+        cmbProduct.setItems(FXCollections.observableArrayList(allProducts));
+    }
+
+    private void setupProductComboBox() {
+        // Set up StringConverter to display product name in ComboBox
+        cmbProduct.setConverter(new javafx.util.StringConverter<Product>() {
+            @Override
+            public String toString(Product product) {
+                return product == null ? "" : product.getName();
+            }
+
+            @Override
+            public Product fromString(String string) {
+                return allProducts.stream()
+                        .filter(p -> p.getName().equals(string))
+                        .findFirst()
+                        .orElse(null);
+            }
+        });
+
+        // Set cell factory for dropdown display
+        cmbProduct.setCellFactory(lv -> new ListCell<Product>() {
+            @Override
+            protected void updateItem(Product product, boolean empty) {
+                super.updateItem(product, empty);
+                if (empty || product == null) {
+                    setText(null);
+                } else {
+                    setText(product.getName() + " - Rs. " + product.getPrice() + " (Stock: " + product.getQuantity() + ")");
+                }
+                setStyle("-fx-text-fill: #ffffff; -fx-background-color: #2d3250;");
+            }
+        });
+    }
+
+    private void setupProductSearch() {
+        txtProductSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.isEmpty()) {
+                cmbProduct.setItems(FXCollections.observableArrayList(allProducts));
+            } else {
+                ObservableList<Product> filtered = FXCollections.observableArrayList();
+                for (Product product : allProducts) {
+                    if (product.getName().toLowerCase().contains(newValue.toLowerCase())) {
+                        filtered.add(product);
+                    }
+                }
+                cmbProduct.setItems(filtered);
+                if (!filtered.isEmpty()) {
+                    cmbProduct.show();
+                }
+            }
+        });
     }
 
     private void setupCartTable() {
@@ -89,11 +139,10 @@ public class OrderController {
 
     private void setupProductSelection() {
         cmbProduct.setOnAction(event -> {
-            String selectedProductName = cmbProduct.getValue();
-            if (selectedProductName != null && productMap.containsKey(selectedProductName)) {
-                Product product = productMap.get(selectedProductName);
-                lblProductPrice.setText(String.format("Rs. %.2f", product.getPrice()));
-                lblAvailableStock.setText(String.valueOf(product.getQuantity()));
+            Product selectedProduct = cmbProduct.getValue();
+            if (selectedProduct != null) {
+                lblProductPrice.setText(String.format("Rs. %.2f", selectedProduct.getPrice()));
+                lblAvailableStock.setText(String.valueOf(selectedProduct.getQuantity()));
             } else {
                 lblProductPrice.setText("Rs. 0.00");
                 lblAvailableStock.setText("0");
@@ -127,8 +176,8 @@ public class OrderController {
     }
 
     private void handleAddToCart() {
-        String selectedProductName = cmbProduct.getValue();
-        if (selectedProductName == null) {
+        Product selectedProduct = cmbProduct.getValue();
+        if (selectedProduct == null) {
             showAlert(Alert.AlertType.WARNING, "Warning", "Please select a product.");
             return;
         }
@@ -146,17 +195,16 @@ public class OrderController {
                 return;
             }
 
-            Product product = productMap.get(selectedProductName);
-            if (quantity > product.getQuantity()) {
-                showAlert(Alert.AlertType.WARNING, "Warning", "Not enough stock. Available: " + product.getQuantity());
+            if (quantity > selectedProduct.getQuantity()) {
+                showAlert(Alert.AlertType.WARNING, "Warning", "Not enough stock. Available: " + selectedProduct.getQuantity());
                 return;
             }
 
             // Check if product already in cart
             for (CartItem item : cartItems) {
-                if (item.getProductId() == product.getProductId()) {
+                if (item.getProductId() == selectedProduct.getProductId()) {
                     int newQty = item.getQuantity() + quantity;
-                    if (newQty > product.getQuantity()) {
+                    if (newQty > selectedProduct.getQuantity()) {
                         showAlert(Alert.AlertType.WARNING, "Warning", "Total quantity exceeds available stock.");
                         return;
                     }
@@ -169,7 +217,7 @@ public class OrderController {
             }
 
             // Add new item
-            CartItem cartItem = new CartItem(product.getProductId(), product.getName(), product.getPrice().doubleValue(), quantity);
+            CartItem cartItem = new CartItem(selectedProduct.getProductId(), selectedProduct.getName(), selectedProduct.getPrice().doubleValue(), quantity);
             cartItems.add(cartItem);
             updateTotals();
             txtQuantity.clear();

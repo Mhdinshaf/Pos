@@ -51,10 +51,23 @@
                                     <children>
                                         <VBox spacing="5.0" HBox.hgrow="ALWAYS">
                                             <children>
+                                                <Label text="Search Product" textFill="#ffffff">
+                                                    <font>
+                                                        <Font size="12.0" />
+                                                    </font>
+                                                </Label>
+                                                <TextField fx:id="txtProductSearch" maxWidth="Infinity" promptText="Type to search products..." style="-fx-background-color: #2d3250; -fx-text-fill: #ffffff; -fx-prompt-text-fill: #808080; -fx-background-radius: 8; -fx-border-color: #3a86ff; -fx-border-radius: 8;">
+                                                    <font>
+                                                        <Font size="14.0" />
+                                                    </font>
+                                                </TextField>
                                                 <Label text="Select Product" textFill="#ffffff">
                                                     <font>
                                                         <Font size="12.0" />
                                                     </font>
+                                                    <VBox.margin>
+                                                        <Insets top="5.0" />
+                                                    </VBox.margin>
                                                 </Label>
                                                 <ComboBox fx:id="cmbProduct" maxWidth="Infinity" promptText="Choose a product" style="-fx-background-color: #2d3250; -fx-background-radius: 8; -fx-border-color: #3a86ff; -fx-border-radius: 8;" />
                                             </children>

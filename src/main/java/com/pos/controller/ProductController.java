@@ -127,6 +127,12 @@ public class ProductController {
         productList = FXCollections.observableArrayList(productService.getAllProducts());
         filteredList = new FilteredList<>(productList, p -> true);
         tblProducts.setItems(filteredList);
+        tblProducts.refresh();
+        // Reapply search filter if exists
+        String searchText = txtSearch.getText();
+        if (searchText != null && !searchText.isEmpty()) {
+            filteredList.setPredicate(product -> product.getName().toLowerCase().contains(searchText.toLowerCase()));
+        }
     }
 
     private void setupTableSelection() {
@@ -277,11 +283,11 @@ public class ProductController {
         txtName.clear();
         txtPrice.clear();
         txtQuantity.clear();
-        txtSearch.clear();
         cmbCategory.setValue(null);
         cmbSupplier.setValue(null);
         selectedProduct = null;
         tblProducts.getSelectionModel().clearSelection();
+        tblProducts.refresh();
     }
 
     private boolean validateInputs(String name, String price, String quantity) {
