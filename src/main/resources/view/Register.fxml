@@ -102,6 +102,15 @@
                         <Font size="11.0" />
                     </font>
                 </Hyperlink>
+                
+                <Button fx:id="btnBack" mnemonicParsing="false" onAction="#handleBack" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #607D8B; -fx-text-fill: #ffffff; -fx-background-radius: 5; -fx-cursor: hand;" text="Back">
+                    <font>
+                        <Font name="System Bold" size="12.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets top="5.0" />
+                    </VBox.margin>
+                </Button>
             </children>
         </VBox>
     </children>

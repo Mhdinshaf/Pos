@@ -40,6 +40,9 @@ public class RegisterController {
     @FXML
     private Hyperlink linkLogin;
 
+    @FXML
+    private Button btnBack;
+
     private final UserService userService;
 
     public RegisterController() throws SQLException, ClassNotFoundException {
@@ -92,6 +95,11 @@ public class RegisterController {
     }
 
     private void handleBackToLogin(ActionEvent event) {
+        navigateToLogin();
+    }
+
+    @FXML
+    private void handleBack(ActionEvent event) {
         navigateToLogin();
     }
 
