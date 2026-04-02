@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #1a1f36;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pos.controller.DashboardController">
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #1a1f36;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pos.controller.DashboardController">
     <children>
         <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -228,9 +228,32 @@
                                 </VBox>
                             </children>
                         </HBox>
+                  <HBox prefHeight="106.0" prefWidth="734.0" />
+                  <VBox alignment="CENTER" prefHeight="120.0" prefWidth="170.0" spacing="10.0" style="-fx-background-color: #2d3250; -fx-background-radius: 10;">
+                     <children>
+                        <Label text="📦" textFill="#4CAF50">
+                           <font>
+                              <Font size="28.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblTotalProducts1" text="0" textFill="#ffffff">
+                           <font>
+                              <Font name="System Bold" size="32.0" />
+                           </font>
+                        </Label>
+                        <Label text="Total Products" textFill="#a0a0a0">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                     </padding>
+                  </VBox>
 
                         <!-- Quick Actions Section -->
-                        <VBox spacing="15.0" style="-fx-background-color: #2d3250; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
+                        <VBox prefHeight="146.0" prefWidth="500.0" spacing="15.0" style="-fx-background-color: #2d3250; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
                             <padding>
                                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                             </padding>

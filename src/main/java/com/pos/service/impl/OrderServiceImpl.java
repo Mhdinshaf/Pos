@@ -27,7 +27,6 @@ public class OrderServiceImpl implements OrderService {
             return -1;
         }
 
-        // Validate stock availability for all items
         for (OrderItem item : orderItems) {
             Product product = productRepository.findById(item.getProductId());
             if (product == null) {
@@ -38,20 +37,20 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
-        // Calculate total amount
+
         double totalAmount = 0;
         for (OrderItem item : orderItems) {
             totalAmount += item.getUnitPrice() * item.getQuantity();
         }
 
-        // Create and save order
+
         Order order = new Order(LocalDateTime.now(), totalAmount, userId);
         int orderId = orderRepository.saveOrder(order);
         if (orderId == -1) {
             return -1;
         }
 
-        // Save order items and update stock
+
         for (OrderItem item : orderItems) {
             item.setOrderId(orderId);
             boolean itemSaved = orderRepository.saveOrderItem(item);
@@ -59,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
                 return -1;
             }
 
-            // Reduce stock
+
             Product product = productRepository.findById(item.getProductId());
             int newQuantity = product.getQuantity() - item.getQuantity();
             productRepository.updateStock(item.getProductId(), newQuantity);
